@@ -1,9 +1,7 @@
 /**
  * Wake word detection — cross-platform:
- *  • Windows: listens to IPC 'speech:result' events from the PowerShell
- *             System.Speech background process (speech.ts)
- *  • macOS:   falls back to the Web Speech API (works natively on macOS
- *             via the system speech recogniser, no Google key needed)
+ *  • Windows: IPC 'speech:result' from PowerShell System.Speech (speech.ts)
+ *  • macOS:   IPC 'speech:result' from Swift SFSpeechRecognizer (speech.ts)
  */
 import { useEffect, useRef } from 'react'
 import { useStore } from '../store'

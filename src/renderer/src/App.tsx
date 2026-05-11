@@ -15,6 +15,18 @@ export default function App() {
     window.jarvis.getSettings().then((s) => setSettings(s))
   }, [])
 
+  // Request microphone permission on startup (required on macOS)
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        // immediately release the stream — we just needed the permission prompt
+        stream.getTracks().forEach((t) => t.stop())
+      })
+      .catch(() => {
+        console.warn('Microphone permission denied or not available')
+      })
+  }, [])
+
   const sendMessage = useCallback((text: string) => {
     if (!text.trim()) return
     if (agentState === 'thinking') return

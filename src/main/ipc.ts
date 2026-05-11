@@ -1,4 +1,5 @@
 import { ipcMain, app } from 'electron'
+import { spawn, ChildProcess } from 'child_process'
 import { store } from './settings'
 import { agent } from './agent/index'
 import { initiateGoogleAuth } from './agent/tools/calendar'
@@ -73,6 +74,21 @@ export function registerIpcHandlers(): void {
       win.webContents.send('agent:event', agentEvent)
     })
   })
+
+  // ── macOS native TTS via `say` command (sounds way more human) ───────────────
+  let sayProc: ChildProcess | null = null
+  ipcMain.handle('tts:say', async (_, text: string, voice: string) => {
+    if (process.platform !== 'darwin') return false
+    sayProc?.kill()
+    return new Promise<void>((resolve) => {
+      sayProc = spawn('say', ['-v', voice, text])
+      sayProc.on('exit', () => { sayProc = null; resolve() })
+    })
+  })
+  ipcMain.on('tts:say-stop', () => { sayProc?.kill(); sayProc = null })
+
+  // ── Platform info ─────────────────────────────────────────────────────────────
+  ipcMain.handle('app:platform', () => process.platform)
 
   // ── Mobile server ────────────────────────────────────────────────────────────
   ipcMain.handle('mobile:url', () => getMobileServerURL())

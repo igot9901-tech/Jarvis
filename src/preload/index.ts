@@ -33,6 +33,13 @@ contextBridge.exposeInMainWorld('jarvis', {
   // mobile
   getMobileURL: () => ipcRenderer.invoke('mobile:url'),
 
+  // macOS native TTS
+  ttsSay: (text: string, voice: string) => ipcRenderer.invoke('tts:say', text, voice),
+  ttsSayStop: () => ipcRenderer.send('tts:say-stop'),
+
+  // platform
+  getPlatform: () => ipcRenderer.invoke('app:platform'),
+
   // app
   getVersion: () => ipcRenderer.invoke('app:version')
 })

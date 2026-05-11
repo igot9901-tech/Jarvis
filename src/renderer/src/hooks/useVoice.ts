@@ -28,11 +28,11 @@ async function elevenLabsSpeak(
       },
       body: JSON.stringify({
         text,
-        model_id: 'eleven_turbo_v2_5',
+        model_id: 'eleven_multilingual_v2',
         voice_settings: {
-          stability: 0.48,
-          similarity_boost: 0.78,
-          style: 0.12,
+          stability: 0.35,        // lower = more expressive, less flat
+          similarity_boost: 0.85, // stay close to the voice character
+          style: 0.40,            // adds natural style/emotion
           use_speaker_boost: true
         }
       })
